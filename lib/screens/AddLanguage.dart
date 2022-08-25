@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_states_widgets_routes/models/Language.dart';
 
-class MyWidget extends StatelessWidget {
-  MyWidget({Key? key}) : super(key: key);
+class AddLanguage extends StatelessWidget {
+  AddLanguage({Key? key}) : super(key: key);
 
   final _formkey = GlobalKey<FormState>();
   final _titleController = TextEditingController();

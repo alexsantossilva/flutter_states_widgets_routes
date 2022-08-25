@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_states_widgets_routes/customs/itemList.dart';
 import 'package:flutter_states_widgets_routes/models/Language.dart';
+import 'package:flutter_states_widgets_routes/screens/AddLanguage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        "/":(context) => const MyApp(),)
-      }
-      home: const MyHomePage(),
+        "/" : (context) => const MyHomePage(),
+        "/add" : (context) => AddLanguage(),
+      },
     );
   }
 }
@@ -29,28 +29,24 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  List<bool> selects = [false,false,false,false,false];
-  List<Language> languages = [
-    Language("Android Nativo", "Linguagens C, Java, Kotlin"),
-    Language("Ionic", "Linguagens Javascript e TypeScript"),
-    Language("IOS Nativo", "Linguagens Objective-C e Swift"),
-    Language("Reactive Native", "Linguagens Javascript e TypeScriptn"),
-  ];
-  
+  List<Language> languages = [];
 
   @override
   Widget build(BuildContext context) {
-
-     return Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text("Escolha de lingagens"),
+          actions: [
+            IconButton(
+              onPressed: _goToNewLanguage, 
+              icon: const Icon(Icons.add)
+            )
+          ],
         ),
         body: Column(children: [
           Wrap(spacing: 10, children: buildChoices()),
@@ -58,8 +54,17 @@ class _MyHomePageState extends State<MyHomePage> {
         ]));
   }
 
+  void _goToNewLanguage(){
+    Future future = Navigator.pushNamed(context, "/add");
+    future.then((language) => {
+      setState((){
+        languages.add(language);
+      })
+    }); 
+  }
+
   List<Widget> buildChoices(){
-     return languages.map((language) => ChoiceChip(
+    return languages.map((language) => ChoiceChip(
             label: Text(language.title),
                 selected: language.selected,
                 onSelected: (value) {
@@ -72,7 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildListItens() {
     return languages
       .where((language) => language.selected)
-      .map((language) => getItemList(language.title, language.subTitle, language.icon != null ? language.icon! : Icons.blur_circular))
+      .map((language) => getItemList(language.title, language.subTitle, 
+        language.icon != null ? language.icon! : Icons.blur_circular))
         .toList();
   }
+
+  //final Widget appleSvg = SvgPicture.asset('images/apple.svg');
 }
